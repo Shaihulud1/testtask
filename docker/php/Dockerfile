@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         intl \
         mysqli \
-        pdo pdo_mysql
+        pdo pdo_mysql \
+    && a2enmod rewrite \
+    && service apache2 restart
 
 
 COPY ./ /var/www/html

@@ -14,17 +14,18 @@ recursiveRenewStatus = async () => {
             let url = `task?task_id=${waitingTask.dataset.task}`
             let response = await fetch(url, { method: "GET" })
             response = await response.json()
-            pasteNewTask(
-                waitingTask.dataset.id,
-                response.status,
-                response.retry_id,
-                waitingTask.dataset.name
-            )
+            await pasteNewTask(
+				waitingTask.dataset.id,
+				response.status,
+				response.retry_id,
+				waitingTask.dataset.name,
+				response.result || 'Ожидайте'
+			)
             await console.log(response)
-            await sleep(2000)
+            await sleep(1000)
         }
     } 
-    await sleep(2000)
+    await sleep(1000)
     recursiveRenewStatus()
 }
 recursiveRenewStatus()
@@ -36,6 +37,7 @@ pasteNewTask = (id, status, retry_id, name, result) => {
                         <strong>Результат:</strong> ${result} 
                     </p>
                 </div>`
+    console.log(htmlTemplate)
     let existTask = document.querySelector('[data-id="' + id + '"]')
     if (existTask) {
         existTask.outerHTML = htmlTemplate
@@ -80,7 +82,7 @@ uploadPhotoForm.onsubmit = async (e) => {
 		response.status,
 		response.retry_id,
 		nameInput.value,
-		response.result
+		response.result || 'Ожидайте'
     )
     nameInput.value = ""
     photoInput.value = ""
