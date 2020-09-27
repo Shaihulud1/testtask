@@ -65,14 +65,13 @@ uploadPhotoForm.onsubmit = async (e) => {
         uploadPhotoForm.querySelector(".errors").innerHTML = errors
         return
     }
-    nameInput.value = ""
-    photoInput.value = ""
     let response = await fetch("/upload-photo", {
         method: "POST",
         body: new FormData(uploadPhotoForm),
     })
     response = await response.json()
-    if (response.status == 'failed') {
+    await console.log(response.status)
+    if (await response.status == 'failed') {
         alert('Ошибка сервера')
         return;
     }
@@ -83,4 +82,6 @@ uploadPhotoForm.onsubmit = async (e) => {
 		nameInput.value,
 		response.result
     )
+    nameInput.value = ""
+    photoInput.value = ""
 }
