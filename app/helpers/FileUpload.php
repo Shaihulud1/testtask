@@ -52,7 +52,7 @@ class FileUpload
     
     public function saveFile(): bool
     {
-        $this->savedFile = $_SERVER['DOCUMENT_ROOT'].'/app/photos/' . uniqid().time() . "." . $this->extension;
+        $this->savedFile = $_SERVER['DOCUMENT_ROOT'].'/app/photo-temp/' . uniqid().time() . "." . $this->extension;
         return move_uploaded_file($_FILES["photo"]["tmp_name"], $this->savedFile);
     }
 
