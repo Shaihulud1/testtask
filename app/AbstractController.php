@@ -6,13 +6,13 @@ abstract class AbstractController
     protected function renderView(string $requestView, array $vars = []): void
     {
         $requestView .= ".php";
-        $views = scandir(__DIR__.'/views');
+        $views = scandir($_SERVER['DOCUMENT_ROOT'].'/app/views');
         foreach ($views as $view) {
             if ($view == $requestView) {
                 if (!empty($vars)) {
                     extract($vars, EXTR_PREFIX_SAME, 'app');
                 }
-                require_once 'views/'.$view;
+                require_once $_SERVER['DOCUMENT_ROOT'].'/app/views/'.$view;
                 break;
             }
         }
