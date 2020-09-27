@@ -10,7 +10,7 @@ abstract class AbstractController
         foreach ($views as $view) {
             if ($view == $requestView) {
                 if (!empty($vars)) {
-                    extract($vars, EXTR_PREFIX_IF_EXISTS, 'app');
+                    extract($vars, EXTR_PREFIX_SAME, 'app');
                 }
                 require_once 'views/'.$view;
                 break;

@@ -20,7 +20,19 @@
                 <p class="errors"></p>
             </form>        
         </div>
-    </div>   
+    </div>
+    <div class="tasks">
+        <?if (!empty($tasks)) {?>
+                <?foreach ($tasks as $task) {?>
+                    <div class="task-item" data-id="<?=$task['id']?>" data-status="<?=$task['status']?>" data-task="<?=$task['retry_id']?>" data-name="<?=$task['name']?>">
+                        <p>
+                            <strong>Имя:</strong> <?=$task['name']?> 
+                            <strong>Результат:</strong> <?=$task['result']?>
+                        </p>
+                    </div>
+                <?}?>
+        <?}?>  
+    </div>
     <script src="/js/main.js"></script>
 </body>
 </html>

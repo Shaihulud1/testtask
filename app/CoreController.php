@@ -8,14 +8,16 @@ class CoreController extends AbstractController
 {
     public function index()
     {
-        return $this->renderView('main');
+        $userId = $_COOKIE['PHPSESSID'];
+        $task = new Task;
+        $tasks = $task->getTasks(['id_user' => $userId]);
+        return $this->renderView('main', ['tasks' => $tasks]);
     }
 
     public function uploadPhoto()
     {
         $response = [];
         $errors = [];
-       # {"status": "received", "task": НОМЕР_ЗАДАЧИ, "result":"null или Результат_(float)"}
         if (!isset($_FILES['photo'])) {
             $errors[] = 'Пустое фото';
         }
@@ -29,45 +31,24 @@ class CoreController extends AbstractController
         }
         $name = trim(strip_tags($_POST['name']));
         $fileUpload = new FileUpload($_FILES['photo']);
-
+        $userId = $_COOKIE['PHPSESSID']; 
         $task = new Task;
         $task->setFile($fileUpload);
-        $task->setUser($name);
-        if ($task->save()) {
-            echo 'done';
-        } else {
-            echo 'error';
-        }
-
-        
-        // $posibleExtensions = ['jpg', 'png', 'jpeg'];
-        // if (!$fileUpload->isCorrectExtension($posibleExtensions)) 
-        // {
-        //     $errors[] = 'Неправильное расширение файла, должно быть одно из следующих расширений: '.implode(', ', $posibleExtensions);
-        //     $response = ['status' => "failed", "result" => $errors];
-        //     $this->renderJson($response);  
-        //     return;           
-        // }
-
-        
-        
-        // print_R($fileUpload->getFileHash());
-        // die;
-        
-
-        // print_R($name);
-        // print_R($userId);
-        // die;
-        // print_R($_POST);
-        // print_r($_FILES);
-        // die;
-        // $uploaded = ['response' => 'photo'];
-        // return $this->renderJson($uploaded); 
+        $task->setName($name);
+        $task->setUserId($userId);
+        $result = $task->save();
+        $this->renderJson($result); 
     }
     
     public function getTaskStatus()
     {
-        $uploaded = ['response' => 'tasks'];
-        return $this->renderJson($uploaded); 
+        $taskId = trim(strip_tags($_GET['task_id']));
+        $task = new Task;
+        $waitingTask = $task->getTasks(['retry_id' => $taskId, 'status' => 'wait']);
+        $taskStatus = $task->getNamePhotoConformity(['retry_id' => $taskId]);
+        if ($taskStatus['status'] == 'ready' || $taskStatus['status'] == 'success') {
+            $task->updateTask((int)$waitingTask[0]['id'], (string)$taskStatus['status'], (string)$taskStatus['result']);
+        }
+        return $this->renderJson($taskStatus);
     }
 }

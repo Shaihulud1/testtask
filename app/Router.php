@@ -17,8 +17,8 @@ class Router
     public function existRoute(string $requestUri, string $requestMethod): ?array
     {
         $existRoute = [];
-        foreach ($this->routes as $route) {
-            if ($route['method'] == $requestMethod && preg_match('/^'.preg_quote($route['url'], '/').'$/', $requestUri)) {
+        foreach ($this->routes as $key => $route) {
+            if ($route['method'] == $requestMethod && preg_match('/'.$route['url'].'/i', $requestUri)) {
                 $existRoute = $route;
                 break;
             }

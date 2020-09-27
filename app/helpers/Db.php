@@ -24,11 +24,18 @@ class Db
         return self::$dbObj;
     } 
 
-    public function query($sql, $params): ?array
+    public function query($sql, $params, $insert=false): ?array
     {
-        $q = $this->conn->prepare($sql);
-        $q->execute($params);
-        $result = $q->fetchAll();
-        return is_array($result) ? $result : null;
+        try {
+            $q = $this->conn->prepare($sql);
+            $result = $q->execute($params);
+            $result = $insert ? ['id' => $this->conn->lastInsertId()] : $q->fetchAll();
+            return is_array($result) ? $result : null;
+        } catch (\Throwable $th) {
+            print_R($th);
+            die;
+            return null;
+        }
+
     }
 }
