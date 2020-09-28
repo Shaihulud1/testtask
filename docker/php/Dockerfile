@@ -1,5 +1,8 @@
 FROM php:7.4-apache
 
+RUN usermod -u 1000 www-data
+RUN usermod -G staff www-data
+
 RUN apt-get update && apt-get install -y
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -16,5 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && service apache2 restart
 
 
-COPY ./ /var/www/html
 WORKDIR /var/www/html 
+COPY --chown=www-data:www-data ./ /var/www/html 
+
+
+
+
