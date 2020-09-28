@@ -20,8 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 
 WORKDIR /var/www/html 
-COPY --chown=www-data:www-data ./ /var/www/html 
-
-
+COPY ./ /var/www/html 
 
 
