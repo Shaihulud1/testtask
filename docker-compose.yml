@@ -7,8 +7,6 @@ services:
             dockerfile: ./docker/php/Dockerfile
         ports:
             - 127.0.0.1:8000:80
-        volumes:
-            - ./:/var/www/html
     mysql:
         image: mariadb:10.5.5
         environment: 
